@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion Admin - GURU-PRODUCTS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <style>
+    :root {
+      --white: #ffffff;
+      --dark: #0a2239;
+      --primary: #1ca9b4;
+      --secondary: #3f72af;
+      --light: #f7fbff;
+      --accent: #3f72af;
+      --fs-xl: 2.2rem;
+      --trans: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, var(--light) 0%, #e8f4ff 100%);
+      color: var(--dark);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px 35px;
+      box-shadow: 
+        0 15px 35px rgba(10, 34, 57, 0.1),
+        0 5px 15px rgba(10, 34, 57, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .login-logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(10, 34, 57, 0.1));
+    }
+
+    .login-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border: 2px solid #e8f4ff;
+      border-radius: 12px;
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      transition: var(--trans);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(28, 169, 180, 0.1);
+      background: white;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: var(--trans);
+    }
+
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--trans);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      transition: var(--trans);
+      z-index: 1;
+    }
+
+    .login-button:hover::before {
+      left: 0;
+    }
+
+    .login-button span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(28, 169, 180, 0.3);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: var(--trans);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    .error-message {
+      background: #ffe6e6;
+      color: #d63031;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      border-left: 4px solid #d63031;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: shake 0.5s ease;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 25px;
+      }
+      
+      .login-title {
+        font-size: 1.6rem;
+      }
+      
+      .form-input {
+        padding: 12px 15px 12px 45px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="pictures/logo.png" alt="GURU-PRODUCTS" class="login-logo">
+        <h1 class="login-title">Espace Administrateur</h1>
+        <p class="login-subtitle">Connectez-vous pour gérer vos produits</p>
+      </div>
+
+      <div class="error-message" id="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="error-text">Identifiants incorrects</span>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username" class="form-label">
+            <i class="fas fa-user"></i> Nom d'utilisateur
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-user input-icon"></i>
+            <input 
+              type="text" 
+              id="username" 
+              class="form-input" 
+              placeholder="Entrez votre nom d'utilisateur"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <i class="fas fa-lock"></i> Mot de passe
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock input-icon"></i>
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input" 
+              placeholder="Entrez votre mot de passe"
+              required
+            >
+            <button type="button" class="password-toggle" id="password-toggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="login-button">
+          <span>Se connecter</span>
+        </button>
+
+        <div class="loading" id="loading">
+          <div class="loading-spinner"></div>
+          <span style="margin-left: 10px;">Connexion en cours...</span>
+        </div>
+      </form>
+
+      <div class="login-footer">
+        <a href="index.html" class="back-link">
+          <i class="fas fa-arrow-left"></i>
+          Retour au site principal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Éléments DOM
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('password-toggle');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    const loading = document.getElementById('loading');
+
+    // Identifiants de démonstration (à remplacer par une vraie authentification)
+    const ADMIN_CREDENTIALS = {
+      username: 'admin',
+      password: 'admin123'
+    };
+
+    // Basculer la visibilité du mot de passe
+    passwordToggle.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // Changer l'icône
+      const icon = this.querySelector('i');
+      if (type === 'text') {
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+
+    // Gérer la soumission du formulaire
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      // Masquer les erreurs précédentes
+      errorMessage.classList.remove('show');
+      
+      // Validation basique
+      if (!username || !password) {
+        showError('Veuillez remplir tous les champs');
+        return;
+      }
+      
+      // Afficher le chargement
+      loading.style.display = 'block';
+      
+      // Simuler une requête d'authentification
+      setTimeout(() => {
+        // Vérifier les identifiants
+        if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+          // Connexion réussie - rediriger vers la page admin
+          window.location.href = 'admin.html';
+        } else {
+          // Identifiants incorrects
+          showError('Nom d\'utilisateur ou mot de passe incorrect');
+          loading.style.display = 'none';
+        }
+      }, 1500); // Simulation de délai réseau
+    });
+
+    // Fonction pour afficher les erreurs
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.classList.add('show');
+      
+      // Focus sur le premier champ
+      if (!usernameInput.value.trim()) {
+        usernameInput.focus();
+      } else if (!passwordInput.value.trim()) {
+        passwordInput.focus();
+      }
+    }
+
+    // Effets visuels sur les champs
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+      // Effet au focus
+      input.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+      });
+      
+      // Effet à la perte du focus
+      input.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+      });
+    });
+
+    // Animation d'entrée de la carte
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginCard = document.querySelector('.login-card');
+      loginCard.style.opacity = '0';
+      loginCard.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        loginCard.style.transition = 'all 0.5s ease';
+        loginCard.style.opacity = '1';
+        loginCard.style.transform = 'translateY(0)';
+      }, 100);
+    });
+  </script>
+</body>
+</html>

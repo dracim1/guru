@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - GURU-PRODUCTS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <style>
+    :root {
+      --white: #ffffff;
+      --dark: #0a2239;
+      --primary: #1ca9b4;
+      --secondary: #3f72af;
+      --light: #f7fbff;
+      --accent: #ff9ecd;
+      --fs-xl: 2.2rem;
+      --trans: all 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--dark);
+      background: var(--light);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    /* HEADER ADMIN */
+    .admin-header {
+      background: linear-gradient(135deg, var(--dark), var(--secondary));
+      color: white;
+      padding: 20px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-logo {
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 1.5rem;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: var(--trans);
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* MAIN CONTENT */
+    .admin-main {
+      padding: 40px 0;
+    }
+
+    .admin-title {
+      text-align: center;
+      font-size: var(--fs-xl);
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* SEARCH AND FILTERS */
+    .admin-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .search-bar {
+      display: flex;
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 12px 20px;
+      border: 2px solid #ffe0ef;
+      border-radius: 30px 0 0 30px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .search-bar button {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 0 25px;
+      border-radius: 0 30px 30px 0;
+      cursor: pointer;
+    }
+
+    .add-product-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* PRODUCTS TABLE */
+    .products-table {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(10, 34, 57, 0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    th {
+      background: var(--light);
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .product-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .edit-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .modal-title {
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ffe0ef;
+      border-radius: 8px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .save-btn, .cancel-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+    }
+
+    .cancel-btn {
+      background: var(--light);
+      color: var(--dark);
+      border: 1px solid #ddd;
+    }
+
+    /* Image upload styles */
+    .image-upload-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .image-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px dashed #ddd;
+      display: none;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 15px;
+      background-color: var(--light);
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--trans);
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary);
+      background-color: rgba(28, 169, 180, 0.1);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .admin-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-bar {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div class="container admin-nav">
+      <div class="admin-logo">GURU ADMIN</div>
+      <div class="admin-actions">
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="container">
+      <h1 class="admin-title">Gestion des Produits</h1>
+      
+      <div class="admin-controls">
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Rechercher un produit...">
+          <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <button class="add-product-btn" id="add-product-btn">
+          <i class="fas fa-plus"></i> Ajouter un produit
+        </button>
+      </div>
+      
+      <div class="products-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Nom</th>
+              <th>Catégorie</th>
+              <th>Type</th>
+              <th>Marque</th>
+              <th>Prix</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Les produits seront générés ici -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal" id="product-modal">
+    <div class="modal-content">
+      <h2 class="modal-title" id="modal-title">Ajouter un produit</h2>
+      <form id="product-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-name">Nom du produit</label>
+            <input type="text" id="product-name" required>
+          </div>
+          <div class="form-group">
+            <label for="product-price">Prix (DA)</label>
+            <input type="number" id="product-price" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-category">Catégorie</label>
+            <select id="product-category" required>
+              <option value="">Sélectionnez une catégorie</option>
+              <option value="skincare">Soins Visage</option>
+              <option value="bodycare">Soins Corps</option>
+              <option value="haircare">Soins Cheveux</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="product-type">Type de produit</label>
+            <select id="product-type" required>
+              <option value="">Sélectionnez un type</option>
+              <!-- Les options seront mises à jour dynamiquement selon la catégorie -->
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-brand">Marque</label>
+            <select id="product-brand" required>
+              <option value="">Sélectionnez une marque</option>
+              <option value="the-purest-solution">The Purest Solution</option>
+              <option value="maru-derm">Maru-derm</option>
+              <option value="urban-care">Urban Care</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="product-image">Image du produit</label>
+            <div class="image-upload-container">
+              <img id="image-preview" class="image-preview" alt="Aperçu de l'image">
+              <div class="file-input-wrapper">
+                <label for="product-image-upload" class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <span id="file-input-text">Choisir une image</span>
+                </label>
+                <input type="file" id="product-image-upload" accept="image/*">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="product-description">Description</label>
+          <textarea id="product-description" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="save-btn" id="save-product">Enregistrer</button>
+          <button type="button" class="cancel-btn" id="cancel-edit">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Types de produits par catégorie
+    const productTypes = {
+      skincare: [
+        { value: 'serum', label: 'Sérum' },
+        { value: 'toner', label: 'Toner' },
+        { value: 'ecran-total', label: 'Écran Total' },
+        { value: 'creme', label: 'Crème' },
+        { value: 'poudre-exfoliante', label: 'Poudre Exfoliante' },
+        { value: 'gel-nettoyant', label: 'Gel Nettoyant' },
+        { value: 'masque', label: 'Masque' }
+      ],
+      bodycare: [
+        { value: 'lotion-corporelle', label: 'Lotion Corporelle' },
+        { value: 'creme-corps', label: 'Crème Corps' },
+        { value: 'gommage-corps', label: 'Gommage Corps' },
+        { value: 'huile-corps', label: 'Huile Corps' },
+        { value: 'gel-douche', label: 'Gel Douche' }
+      ],
+      haircare: [
+        { value: 'shampooing', label: 'Shampooing' },
+        { value: 'apres-shampooing', label: 'Après Shampooing' },
+        { value: 'huile-capillaire', label: 'Huile Capillaire' },
+        { value: 'masque-capillaire', label: 'Masque Capillaire' },
+        { value: 'serum', label: 'Sérum' },
+        { value: 'spray', label: 'Spray' }
+      ]
+    };
+
+    // Gestion des produits
+    let products = JSON.parse(localStorage.getItem('guru-products')) || [];
+    let currentProductId = null;
+    let currentImageFile = null;
+
+    // Éléments DOM
+    const productsTableBody = document.getElementById('products-table-body');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const addProductBtn = document.getElementById('add-product-btn');
+    const productModal = document.getElementById('product-modal');
+    const productForm = document.getElementById('product-form');
+    const cancelEditBtn = document.getElementById('cancel-edit');
+    const categorySelect = document.getElementById('product-category');
+    const typeSelect = document.getElementById('product-type');
+    const imageUpload = document.getElementById('product-image-upload');
+    const imagePreview = document.getElementById('image-preview');
+    const fileInputText = document.getElementById('file-input-text');
+
+    // Mettre à jour les types de produits selon la catégorie sélectionnée
+    function updateProductTypes() {
+      const category = categorySelect.value;
+      typeSelect.innerHTML = '<option value="">Sélectionnez un type</option>';
+      
+      if (category && productTypes[category]) {
+        productTypes[category].forEach(type => {
+          const option = document.createElement('option');
+          option.value = type.value;
+          option.textContent = type.label;
+          typeSelect.appendChild(option);
+        });
+      }
+    }
+
+    // Afficher les produits
+    function displayProducts(productsToDisplay = products) {
+      productsTableBody.innerHTML = '';
+      
+      if (productsToDisplay.length === 0) {
+        productsTableBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Aucun produit trouvé</td></tr>';
+        return;
+      }
+      
+      productsToDisplay.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.id}</td>
+          <td><img src="${product.image}" alt="${product.name}" class="product-image"></td>
+          <td>${product.name}</td>
+          <td>${getCategoryLabel(product.category)}</td>
+          <td>${getTypeLabel(product.type)}</td>
+          <td>${getBrandLabel(product.brand)}</td>
+          <td>${product.price} DA</td>
+          <td>
+            <div class="action-buttons">
+              <button class="edit-btn" onclick="editProduct(${product.id})">Modifier</button>
+              <button class="delete-btn" onclick="deleteProduct(${product.id})">Supprimer</button>
+            </div>
+          </td>
+        `;
+        productsTableBody.appendChild(row);
+      });
+    }
+
+    // Labels
+    function getCategoryLabel(category) {
+      const categories = {
+        skincare: 'Soins Visage',
+        bodycare: 'Soins Corps',
+        haircare: 'Soins Cheveux'
+      };
+      return categories[category] || category;
+    }
+
+    function getTypeLabel(type) {
+      // Recherche dans toutes les catégories
+      for (const category in productTypes) {
+        const typeObj = productTypes[category].find(t => t.value === type);
+        if (typeObj) return typeObj.label;
+      }
+      return type;
+    }
+
+    function getBrandLabel(brand) {
+      const brands = {
+        'the-purest-solution': 'The Purest Solution',
+        'maru-derm': 'Maru-derm',
+        'urban-care': 'Urban Care'
+      };
+      return brands[brand] || brand;
+    }
+
+    // Recherche
+    function searchProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) || 
+        product.description.toLowerCase().includes(searchTerm) ||
+        getCategoryLabel(product.category).toLowerCase().includes(searchTerm) ||
+        getBrandLabel(product.brand).toLowerCase().includes(searchTerm)
+      );
+      displayProducts(filteredProducts);
+    }
+
+    // Ajouter un produit
+    function addProduct() {
+      currentProductId = null;
+      currentImageFile = null;
+      document.getElementById('modal-title').textContent = 'Ajouter un produit';
+      productForm.reset();
+      imagePreview.style.display = 'none';
+      fileInputText.textContent = 'Choisir une image';
+      updateProductTypes();
+      productModal.style.display = 'flex';
+    }
+
+    // Modifier un produit
+    function editProduct(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      
+      currentProductId = id;
+      currentImageFile = null;
+      document.getElementById('modal-title').textContent = 'Modifier le produit';
+      document.getElementById('product-name').value = product.name;
+      document.getElementById('product-price').value = product.price;
+      document.getElementById('product-category').value = product.category;
+      document.getElementById('product-brand').value = product.brand;
+      document.getElementById('product-description').value = product.description;
+      
+      // Afficher l'image existante
+      imagePreview.src = product.image;
+      imagePreview.style.display = 'block';
+      fileInputText.textContent = 'Changer l\'image';
+      
+      // Mettre à jour les types et sélectionner le bon
+      updateProductTypes();
+      setTimeout(() => {
+        document.getElementById('product-type').value = product.type;
+      }, 100);
+      
+      productModal.style.display = 'flex';
+    }
+
+    // Supprimer un produit
+    function deleteProduct(id) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('guru-products', JSON.stringify(products));
+        displayProducts();
+      }
+    }
+
+    // Convertir une image en base64
+    function convertImageToBase64(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Sauvegarder le produit
+    function saveProduct(e) {
+      e.preventDefault();
+      
+      // Si une nouvelle image a été sélectionnée, la convertir
+      if (currentImageFile) {
+        convertImageToBase64(currentImageFile, function(base64Image) {
+          saveProductWithImage(base64Image);
+        });
+      } else {
+        // Si on modifie un produit sans changer l'image
+        const product = products.find(p => p.id === currentProductId);
+        const existingImage = product ? product.image : '';
+        saveProductWithImage(existingImage);
+      }
+    }
+
+    function saveProductWithImage(imageData) {
+      const productData = {
+        name: document.getElementById('product-name').value,
+        price: parseInt(document.getElementById('product-price').value),
+        category: document.getElementById('product-category').value,
+        type: document.getElementById('product-type').value,
+        brand: document.getElementById('product-brand').value,
+        image: imageData,
+        description: document.getElementById('product-description').value
+      };
+      
+      if (currentProductId) {
+        // Modification
+        const index = products.findIndex(p => p.id === currentProductId);
+        if (index !== -1) {
+          products[index] = { ...products[index], ...productData };
+        }
+      } else {
+        // Ajout
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        products.push({ id: newId, ...productData });
+      }
+      
+      localStorage.setItem('guru-products', JSON.stringify(products));
+      productModal.style.display = 'none';
+      displayProducts();
+    }
+
+    // Déconnexion
+    function logout() {
+      window.location.href = 'index.html';
+    }
+
+    // Événements
+    document.addEventListener('DOMContentLoaded', () => {
+      displayProducts();
+    });
+
+    categorySelect.addEventListener('change', updateProductTypes);
+    
+    searchBtn.addEventListener('click', searchProducts);
+    searchInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') searchProducts();
+    });
+
+    addProductBtn.addEventListener('click', addProduct);
+    productForm.addEventListener('submit', saveProduct);
+    cancelEditBtn.addEventListener('click', () => {
+      productModal.style.display = 'none';
+    });
+
+    // Gestion du téléchargement d'image
+    imageUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        // Vérifier le type de fichier
+        if (!file.type.match('image.*')) {
+          alert('Veuillez sélectionner un fichier image valide.');
+          return;
+        }
+        
+        // Vérifier la taille du fichier (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('L\'image ne doit pas dépasser 5MB.');
+          return;
+        }
+        
+        currentImageFile = file;
+        fileInputText.textContent = file.name;
+        
+        // Afficher l'aperçu
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Fermer le modal en cliquant à l'extérieur
+    window.addEventListener('click', (e) => {
+      if (e.target === productModal) {
+        productModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
